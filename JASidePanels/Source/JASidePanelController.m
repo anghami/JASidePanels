@@ -686,7 +686,6 @@ static char ja_kvoContext;
 - (void)_loadLeftPanel {
     self.rightPanelContainer.hidden = YES;
     if (self.leftPanelContainer.hidden && self.leftPanel) {
-        
         if (!_leftPanel.view.superview) {
             [self _layoutSidePanels];
             _leftPanel.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -828,7 +827,11 @@ static char ja_kvoContext;
     [self _adjustCenterFrame];
     
     if (animated) {
-        [self _animateCenterPanel:shouldBounce completion:nil];
+        [self _animateCenterPanel:shouldBounce completion:^(BOOL finished){
+            // Ensure that the left panel is not hidden, if the center panel is close while the left panel is opened
+            // it can cause the left panel to disappear
+            self.leftPanelContainer.hidden = NO;
+        }];
     } else {
         self.centerPanelContainer.frame = _centerPanelRestingFrame;	
         [self styleContainer:self.centerPanelContainer animate:NO duration:0.0f];
@@ -850,7 +853,11 @@ static char ja_kvoContext;
     [self _adjustCenterFrame];
     
     if (animated) {
-        [self _animateCenterPanel:shouldBounce completion:nil];
+        [self _animateCenterPanel:shouldBounce completion:^(BOOL finished){
+            // Ensure that the right panel is not hidden, if the center panel is close while the right panel is opened
+            // it can cause the right panel to disappear
+            self.rightPanelContainer.hidden = NO;
+        }];
     } else {
         self.centerPanelContainer.frame = _centerPanelRestingFrame;	
         [self styleContainer:self.centerPanelContainer animate:NO duration:0.0f];
