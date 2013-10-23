@@ -168,4 +168,6 @@ typedef enum _JASidePanelState {
 @property (nonatomic, strong, readonly) UIView *rightPanelContainer;
 @property (nonatomic, strong, readonly) UIView *centerPanelContainer;
 
+- (void)_handlePan:(UIGestureRecognizer *)sender;
+
 @end
