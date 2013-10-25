@@ -29,6 +29,9 @@
 
 static char ja_kvoContext;
 
+NSString * const JASidePanelControllerFreezingCenterPanel = @"JASidePanelControllerFreezingCenterPanel";
+NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelControllerUnfreezingCenterPanel";
+
 @interface JASidePanelController() {
     CGRect _centerPanelRestingFrame;
     CGPoint _locationBeforePan;
@@ -437,6 +440,8 @@ static char ja_kvoContext;
 {
     if (IS_IOS7())
     {
+        [[NSNotificationCenter defaultCenter] postNotificationName:JASidePanelControllerFreezingCenterPanel object:nil];
+        
         _centerPanelScreenshot = [[UIScreen mainScreen] snapshotViewAfterScreenUpdates:NO];
         [self.centerPanelContainer addSubview:_centerPanelScreenshot];
         [self setNeedsStatusBarAppearanceUpdate];
@@ -447,6 +452,8 @@ static char ja_kvoContext;
 {
     if (IS_IOS7())
     {
+        [[NSNotificationCenter defaultCenter] postNotificationName:JASidePanelControllerUnfreezingCenterPanel object:nil];
+        
         // nil out centerPanelScreenshot for prefersStatusBarHidden
         UIView *screenShot = _centerPanelScreenshot;
         _centerPanelScreenshot = nil;

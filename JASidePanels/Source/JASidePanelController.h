@@ -36,6 +36,9 @@ typedef enum _JASidePanelState {
     JASidePanelRightVisible
 } JASidePanelState;
 
+extern NSString * const JASidePanelControllerFreezingCenterPanel;
+extern NSString * const JASidePanelControllerUnfreezingCenterPanel;
+
 @interface JASidePanelController : UIViewController<UIGestureRecognizerDelegate>
 
 #pragma mark - Usage
