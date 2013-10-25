@@ -435,29 +435,34 @@ static char ja_kvoContext;
 
 - (void)_freezeCenterPanel
 {
-    _centerPanelScreenshot = [[UIScreen mainScreen] snapshotViewAfterScreenUpdates:NO];
-    [self.centerPanelContainer addSubview:_centerPanelScreenshot];
-    [self setNeedsStatusBarAppearanceUpdate];
+    if (IS_IOS7())
+    {
+        _centerPanelScreenshot = [[UIScreen mainScreen] snapshotViewAfterScreenUpdates:NO];
+        [self.centerPanelContainer addSubview:_centerPanelScreenshot];
+        [self setNeedsStatusBarAppearanceUpdate];
+    }
 }
 
 - (void)_unfreezeCenterPanel
 {
-	// nil out centerPanelScreenshot for prefersStatusBarHidden
-	UIView *screenShot = _centerPanelScreenshot;
-    _centerPanelScreenshot = nil;
-
-	// show it
-    [self setNeedsStatusBarAppearanceUpdate];
-    
-    dispatch_queue_t q = dispatch_get_main_queue();
-    
-    // 100ms from now
-    dispatch_time_t t = dispatch_time(DISPATCH_TIME_NOW, 100 * 1000 * 1000);
-    
-    dispatch_after(t, q, ^() {
-        [screenShot removeFromSuperview];
-    });
-    
+    if (IS_IOS7())
+    {
+        // nil out centerPanelScreenshot for prefersStatusBarHidden
+        UIView *screenShot = _centerPanelScreenshot;
+        _centerPanelScreenshot = nil;
+        
+        // show it
+        [self setNeedsStatusBarAppearanceUpdate];
+        
+        dispatch_queue_t q = dispatch_get_main_queue();
+        
+        // 100ms from now
+        dispatch_time_t t = dispatch_time(DISPATCH_TIME_NOW, 100 * 1000 * 1000);
+        
+        dispatch_after(t, q, ^() {
+            [screenShot removeFromSuperview];
+        });
+    }
 }
 
 - (BOOL)prefersStatusBarHidden {
