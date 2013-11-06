@@ -437,7 +437,8 @@ static char ja_kvoContext;
 {
     _centerPanelScreenshot = [[UIScreen mainScreen] snapshotViewAfterScreenUpdates:NO];
     [self.centerPanelContainer addSubview:_centerPanelScreenshot];
-    [self setNeedsStatusBarAppearanceUpdate];
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
+        [self setNeedsStatusBarAppearanceUpdate];
 }
 
 - (void)_unfreezeCenterPanel
@@ -447,7 +448,8 @@ static char ja_kvoContext;
     _centerPanelScreenshot = nil;
 
 	// show it
-    [self setNeedsStatusBarAppearanceUpdate];
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
+        [self setNeedsStatusBarAppearanceUpdate];
     
     dispatch_queue_t q = dispatch_get_main_queue();
     
