@@ -395,7 +395,7 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
         if (next) {
             [self _loadCenterPanelWithPreviousState:previousState];
             [self addChildViewController:next];
-            [self.centerPanelContainer addSubview:next.view];
+            [self.centerPanelContainer insertSubview:next.view atIndex:0];
             [next didMoveToParentViewController:self];
         }
     }
