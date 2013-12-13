@@ -442,7 +442,10 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:JASidePanelControllerFreezingCenterPanel object:nil];
         
-        _centerPanelScreenshot = [[UIScreen mainScreen] snapshotViewAfterScreenUpdates:NO];
+        _centerPanelScreenshot = [[UIView alloc] initWithFrame:CGRectMake(0., 0., self.view.width, 20.)];
+        _centerPanelScreenshot.clipsToBounds = YES;
+        [_centerPanelScreenshot addSubview:[[UIScreen mainScreen] snapshotViewAfterScreenUpdates:NO]];
+        
         [self.centerPanelContainer addSubview:_centerPanelScreenshot];
         [self setNeedsStatusBarAppearanceUpdate];
     }
