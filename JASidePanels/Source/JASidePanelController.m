@@ -25,6 +25,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import "JASidePanelController.h"
+#import "CustomUIButton.h"
 #import <dispatch/dispatch.h>
 
 static char ja_kvoContext;
@@ -90,26 +91,27 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
 #pragma mark - Icon
 
 + (UIImage *)defaultImage {
-	static UIImage *defaultImage = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		UIGraphicsBeginImageContextWithOptions(CGSizeMake(20.f, 13.f), NO, 0.0f);
-
-		[[UIColor blackColor] setFill];
-		[[UIBezierPath bezierPathWithRect:CGRectMake(0, 0, 20, 1)] fill];
-		[[UIBezierPath bezierPathWithRect:CGRectMake(0, 5, 20, 1)] fill];
-		[[UIBezierPath bezierPathWithRect:CGRectMake(0, 10, 20, 1)] fill];
-
-		[[UIColor whiteColor] setFill];
-		[[UIBezierPath bezierPathWithRect:CGRectMake(0, 1, 20, 2)] fill];
-		[[UIBezierPath bezierPathWithRect:CGRectMake(0, 6,  20, 2)] fill];
-		[[UIBezierPath bezierPathWithRect:CGRectMake(0, 11, 20, 2)] fill];
-
-		defaultImage = UIGraphicsGetImageFromCurrentImageContext();
-		UIGraphicsEndImageContext();
-
-	});
-    return defaultImage;
+//	static UIImage *defaultImage = nil;
+//	static dispatch_once_t onceToken;
+//	dispatch_once(&onceToken, ^{
+//		UIGraphicsBeginImageContextWithOptions(CGSizeMake(20.f, 13.f), NO, 0.0f);
+//
+//		[[UIColor blackColor] setFill];
+//		[[UIBezierPath bezierPathWithRect:CGRectMake(0, 0, 20, 1)] fill];
+//		[[UIBezierPath bezierPathWithRect:CGRectMake(0, 5, 20, 1)] fill];
+//		[[UIBezierPath bezierPathWithRect:CGRectMake(0, 10, 20, 1)] fill];
+//
+//		[[UIColor whiteColor] setFill];
+//		[[UIBezierPath bezierPathWithRect:CGRectMake(0, 1, 20, 2)] fill];
+//		[[UIBezierPath bezierPathWithRect:CGRectMake(0, 6,  20, 2)] fill];
+//		[[UIBezierPath bezierPathWithRect:CGRectMake(0, 11, 20, 2)] fill];
+//
+//		defaultImage = UIGraphicsGetImageFromCurrentImageContext();
+//		UIGraphicsEndImageContext();
+//
+//	});
+//    return defaultImage;
+    return [UIImage imageNamed:@"menu-button-ios6"];
 }
 
 #pragma mark - NSObject
@@ -1015,7 +1017,20 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
 #pragma mark - Public Methods
 
 - (UIBarButtonItem *)leftButtonForCenterPanel {
-    return [[UIBarButtonItem alloc] initWithImage:[[self class] defaultImage] style:UIBarButtonItemStylePlain target:self action:@selector(toggleLeftPanel:)];
+    CustomUIButton *button = [CustomUIButton buttonWithType:UIButtonTypeCustom];
+    button.isLeftButton = YES;
+    
+    if (IS_IOS7())
+    {
+        button.x -= 20.;
+    }
+    
+    [button setImage:[[self class] defaultImage] forState:UIControlStateNormal];
+    button.size = CGSizeMake(40, 40);
+    button.imageView.frame = button.bounds;
+    [button addTarget:self action:@selector(toggleLeftPanel:) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:button];
+    return item;
 }
 
 - (void)showLeftPanel:(BOOL)animated {
