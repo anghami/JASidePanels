@@ -37,6 +37,7 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
     CGRect _centerPanelRestingFrame;
     CGPoint _locationBeforePan;
     UIView *_centerPanelScreenshot;
+    UIView *_statusBarCover;
 }
 
 @property (nonatomic, readwrite) JASidePanelState state;
@@ -184,6 +185,16 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
 
     [self _swapCenter:nil previousState:0 with:_centerPanel];
     [self.view bringSubviewToFront:self.centerPanelContainer];
+    
+    if (IS_IOS7())
+    {
+        CGRect statusBarFrame = CGRectMake(0., 0., self.view.width, 20.);
+        
+        _statusBarCover = [[UIView alloc] initWithFrame:statusBarFrame];
+        _statusBarCover.backgroundColor = [self statusBarCoverColor];
+        _statusBarCover.alpha = 0.;
+        [self.view addSubview:_statusBarCover];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -398,6 +409,7 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
             [self _loadCenterPanelWithPreviousState:previousState];
             [self addChildViewController:next];
             [self.centerPanelContainer insertSubview:next.view atIndex:0];
+            
             [next didMoveToParentViewController:self];
         }
     }
@@ -442,13 +454,17 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
 {
     if (IS_IOS7())
     {
-        [[NSNotificationCenter defaultCenter] postNotificationName:JASidePanelControllerFreezingCenterPanel object:nil];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:JASidePanelControllerFreezingCenterPanel object:nil];
         
         _centerPanelScreenshot = [[UIView alloc] initWithFrame:CGRectMake(0., 0., self.view.width, 20.)];
         _centerPanelScreenshot.clipsToBounds = YES;
         [_centerPanelScreenshot addSubview:[[UIScreen mainScreen] snapshotViewAfterScreenUpdates:NO]];
         
         [self.centerPanelContainer addSubview:_centerPanelScreenshot];
+        UIView *firstSubview = self.centerPanelContainer.subviews[0];
+        if ([NSStringFromClass(firstSubview.class) isEqualToString:@"UILayoutContainerView"])
+            firstSubview.y = 20.;
+        
         [self setNeedsStatusBarAppearanceUpdate];
     }
 }
@@ -457,17 +473,23 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
 {
     if (IS_IOS7())
     {
-        [[NSNotificationCenter defaultCenter] postNotificationName:JASidePanelControllerUnfreezingCenterPanel object:nil];
         
         // nil out centerPanelScreenshot for prefersStatusBarHidden
-        UIView *screenShot = _centerPanelScreenshot;
+        [_centerPanelScreenshot removeFromSuperview];
         _centerPanelScreenshot = nil;
         
-        // show it
         [self setNeedsStatusBarAppearanceUpdate];
         
-        // Remove the screenshot
-        [screenShot removeFromSuperview];
+        UIView *main = _centerPanelContainer.subviews[0];
+        main.y = 0;
+        if ([[main.viewController class] isSubclassOfClass:[UINavigationController class]])
+        {
+            UINavigationController *nav = (UINavigationController *)main.viewController;
+            [nav setNavigationBarHidden:YES];
+            [nav setNavigationBarHidden:NO];
+        }
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:JASidePanelControllerUnfreezingCenterPanel object:nil];
     }
 }
 
@@ -477,6 +499,11 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
     } else {
         return NO;
     }
+}
+
+- (UIColor *)statusBarCoverColor
+{
+    return [UIColor blackColor];
 }
 
 #pragma mark - Panel Buttons
@@ -563,7 +590,8 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
             }
 
             if (sender.state == UIGestureRecognizerStateBegan) {
-                [self _freezeCenterPanel];
+                // Make sure the status bar cover is the right color
+                _statusBarCover.backgroundColor = [self statusBarCoverColor];
             }
         }
 
@@ -571,6 +599,10 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
         if (self.style == JASidePanelMultipleActive || self.pushesSidePanels) {
             [self _layoutSideContainers:NO duration:0];
         }
+        
+        CGFloat total = self.view.width * [self leftGapPercentage];
+        _statusBarCover.alpha = self.centerPanelContainer.x / total;
+        NSLog(@"%f / %f = %f", self.centerPanelContainer.x, total, _statusBarCover.alpha);
 
         if (sender.state == UIGestureRecognizerStateEnded) {
             CGFloat deltaX =  frame.origin.x - _locationBeforePan.x;
@@ -794,6 +826,7 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
 
     CGFloat duration = [self _calculatedDuration];
     [UIView animateWithDuration:duration delay:0.0f options:UIViewAnimationOptionCurveLinear|UIViewAnimationOptionLayoutSubviews animations:^{
+        _statusBarCover.alpha = _centerPanelRestingFrame.origin.x == 0 ? 0. : 1.;
         self.centerPanelContainer.frame = _centerPanelRestingFrame;
         [self styleContainer:self.centerPanelContainer animate:YES duration:duration];
         if (self.style == JASidePanelMultipleActive || self.pushesSidePanels) {
@@ -879,9 +912,9 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
     self.state = JASidePanelLeftVisible;
     [self _loadLeftPanel];
 
-    if (!(_centerPanelScreenshot)) {
-        [self _freezeCenterPanel];
-    }
+//    if (!(_centerPanelScreenshot)) {
+//        [self _freezeCenterPanel];
+//    }
 
     [self _adjustCenterFrame];
 
@@ -905,9 +938,9 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
     self.state = JASidePanelRightVisible;
     [self _loadRightPanel];
 
-    if (!(_centerPanelScreenshot)) {
-        [self _freezeCenterPanel];
-    }
+//    if (!(_centerPanelScreenshot)) {
+//        [self _freezeCenterPanel];
+//    }
 
     [self _adjustCenterFrame];
 
@@ -937,7 +970,6 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
             self.leftPanelContainer.hidden = YES;
             self.rightPanelContainer.hidden = YES;
             [self _unloadPanels];
-            [self _unfreezeCenterPanel];
         }];
     } else {
         self.centerPanelContainer.frame = _centerPanelRestingFrame;
@@ -945,7 +977,7 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
         if (self.style == JASidePanelMultipleActive || self.pushesSidePanels) {
             [self _layoutSideContainers:NO duration:0.0f];
         }
-        [self _unfreezeCenterPanel];
+//        [self _unfreezeCenterPanel];
         self.leftPanelContainer.hidden = YES;
         self.rightPanelContainer.hidden = YES;
         [self _unloadPanels];

@@ -171,6 +171,9 @@ extern NSString * const JASidePanelControllerUnfreezingCenterPanel;
 @property (nonatomic, strong, readonly) UIView *rightPanelContainer;
 @property (nonatomic, strong, readonly) UIView *centerPanelContainer;
 
+// Status bar cover color for when revealing side panels
+- (UIColor *)statusBarCoverColor;
+
 - (void)_handlePan:(UIGestureRecognizer *)sender;
 
 @end
