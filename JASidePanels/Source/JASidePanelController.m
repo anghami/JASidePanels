@@ -602,7 +602,6 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
         
         CGFloat total = self.view.width * [self leftGapPercentage];
         _statusBarCover.alpha = self.centerPanelContainer.x / total;
-        NSLog(@"%f / %f = %f", self.centerPanelContainer.x, total, _statusBarCover.alpha);
 
         if (sender.state == UIGestureRecognizerStateEnded) {
             CGFloat deltaX =  frame.origin.x - _locationBeforePan.x;
