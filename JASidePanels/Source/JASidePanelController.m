@@ -91,29 +91,7 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
 
 #pragma mark - Icon
 
-+ (UIImage *)defaultImage {
-//	static UIImage *defaultImage = nil;
-//	static dispatch_once_t onceToken;
-//	dispatch_once(&onceToken, ^{
-//		UIGraphicsBeginImageContextWithOptions(CGSizeMake(20.f, 13.f), NO, 0.0f);
-//
-//		[[UIColor blackColor] setFill];
-//		[[UIBezierPath bezierPathWithRect:CGRectMake(0, 0, 20, 1)] fill];
-//		[[UIBezierPath bezierPathWithRect:CGRectMake(0, 5, 20, 1)] fill];
-//		[[UIBezierPath bezierPathWithRect:CGRectMake(0, 10, 20, 1)] fill];
-//
-//		[[UIColor whiteColor] setFill];
-//		[[UIBezierPath bezierPathWithRect:CGRectMake(0, 1, 20, 2)] fill];
-//		[[UIBezierPath bezierPathWithRect:CGRectMake(0, 6,  20, 2)] fill];
-//		[[UIBezierPath bezierPathWithRect:CGRectMake(0, 11, 20, 2)] fill];
-//
-//		defaultImage = UIGraphicsGetImageFromCurrentImageContext();
-//		UIGraphicsEndImageContext();
-//
-//	});
-//    return defaultImage;
-    return [UIImage imageNamed:@"menu-button-ios6"];
-}
+
 
 #pragma mark - NSObject
 
@@ -1051,12 +1029,8 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
     CustomUIButton *button = [CustomUIButton buttonWithType:UIButtonTypeCustom];
     button.isLeftButton = YES;
     
-    if (IS_IOS7())
-    {
-        button.x -= 20.;
-    }
-    
-    [button setImage:[[self class] defaultImage] forState:UIControlStateNormal];
+    [button setImage:appDelegateS.menuIcon forState:UIControlStateNormal];
+    [button setImage:appDelegateS.menuIcon forState:UIControlStateHighlighted];
     button.size = CGSizeMake(40, 40);
     button.imageView.frame = button.bounds;
     [button addTarget:self action:@selector(toggleLeftPanel:) forControlEvents:UIControlEventTouchUpInside];
