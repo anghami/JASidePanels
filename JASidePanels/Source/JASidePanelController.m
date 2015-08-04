@@ -1029,8 +1029,8 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
     CustomUIButton *button = [CustomUIButton buttonWithType:UIButtonTypeCustom];
     button.isLeftButton = YES;
     
-    [button setImage:appDelegateS.menuIcon forState:UIControlStateNormal];
-    [button setImage:appDelegateS.menuIcon forState:UIControlStateHighlighted];
+    [button setImage:ANGArtworkFactory.menuIcon forState:UIControlStateNormal];
+    [button setImage:ANGArtworkFactory.menuIcon forState:UIControlStateHighlighted];
     button.size = CGSizeMake(40, 40);
     button.imageView.frame = button.bounds;
     [button addTarget:self action:@selector(toggleLeftPanel:) forControlEvents:UIControlEventTouchUpInside];
