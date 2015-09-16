@@ -402,7 +402,7 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
         if (_leftPanel) {
             [self addChildViewController:_leftPanel];
             [_leftPanel didMoveToParentViewController:self];
-            [self _placeButtonForLeftPanel];
+            [self _placeButtonForRightOrLeftPanel];
         }
         if (self.state == JASidePanelLeftVisible) {
             self.visiblePanel = _leftPanel;
@@ -419,6 +419,7 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
         if (_rightPanel) {
             [self addChildViewController:_rightPanel];
             [_rightPanel didMoveToParentViewController:self];
+            [self _placeButtonForRightOrLeftPanel];
         }
         if (self.state == JASidePanelRightVisible) {
             self.visiblePanel = _rightPanel;
@@ -486,8 +487,8 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
 
 #pragma mark - Panel Buttons
 
-- (void)_placeButtonForLeftPanel {
-    if (self.leftPanel) {
+- (void)_placeButtonForRightOrLeftPanel {
+    if (self.leftPanel || self.rightPanel) {
         UIViewController *buttonController = self.centerPanel;
         if ([buttonController isKindOfClass:[UINavigationController class]]) {
             UINavigationController *nav = (UINavigationController *)buttonController;
@@ -718,7 +719,7 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
 #pragma mark - Loading Panels
 
 - (void)_loadCenterPanelWithPreviousState:(JASidePanelState)previousState {
-    [self _placeButtonForLeftPanel];
+    [self _placeButtonForRightOrLeftPanel];
 
     // for the multi-active style, it looks better if the new center starts out in it's fullsize and slides in
     if (self.style == JASidePanelMultipleActive) {
@@ -1016,7 +1017,7 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
             }
         } else if ([keyPath isEqualToString:@"viewControllers"] && object == self.centerPanel) {
             // view controllers have changed, need to replace the button
-            [self _placeButtonForLeftPanel];
+            [self _placeButtonForRightOrLeftPanel];
         }
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
@@ -1033,7 +1034,9 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
     [button setImage:ANGArtworkFactory.menuIcon forState:UIControlStateHighlighted];
     button.size = CGSizeMake(40, 40);
     button.imageView.frame = button.bounds;
-    [button addTarget:self action:@selector(toggleLeftPanel:) forControlEvents:UIControlEventTouchUpInside];
+    if(!IsArabic)
+        [button addTarget:self action:@selector(toggleLeftPanel:) forControlEvents:UIControlEventTouchUpInside];
+    else [button addTarget:self action:@selector(toggleRightPanel:) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:button];
     return item;
 }
