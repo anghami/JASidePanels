@@ -1034,9 +1034,9 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
     [button setImage:ANGArtworkFactory.menuIcon forState:UIControlStateHighlighted];
     button.size = CGSizeMake(40, 40);
     button.imageView.frame = button.bounds;
-    if(!IsArabic)
-        [button addTarget:self action:@selector(toggleLeftPanel:) forControlEvents:UIControlEventTouchUpInside];
-    else [button addTarget:self action:@selector(toggleRightPanel:) forControlEvents:UIControlEventTouchUpInside];
+    if(IsArabic && IS_IOS9())
+        [button addTarget:self action:@selector(toggleRightPanel:) forControlEvents:UIControlEventTouchUpInside];
+    else [button addTarget:self action:@selector(toggleLeftPanel:) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:button];
     return item;
 }
