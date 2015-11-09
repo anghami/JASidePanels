@@ -27,6 +27,7 @@
 #import "JASidePanelController.h"
 #import "CustomUIButton.h"
 #import <dispatch/dispatch.h>
+#import "ANGTooltip.h"
 
 static char ja_kvoContext;
 
@@ -887,6 +888,8 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
 #pragma mark - Showing Panels
 
 - (void)_showLeftPanel:(BOOL)animated bounce:(BOOL)shouldBounce {
+    
+    [settingsS recordDismissTooltip:ANGTooltipTypeMenu];
     self.state = JASidePanelLeftVisible;
     [self _loadLeftPanel];
 
@@ -913,6 +916,7 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
 }
 
 - (void)_showRightPanel:(BOOL)animated bounce:(BOOL)shouldBounce {
+    [settingsS recordDismissTooltip:ANGTooltipTypeMenu];
     self.state = JASidePanelRightVisible;
     [self _loadRightPanel];
 
