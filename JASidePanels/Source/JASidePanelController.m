@@ -572,7 +572,10 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
             if (sender.state == UIGestureRecognizerStateBegan) {
                 // Make sure the status bar cover is the right color
                 _statusBarCover.backgroundColor = [self statusBarCoverColor];
+                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
             }
+        }else {
+            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
         }
 
         // adjust side panel locations, if needed
@@ -582,7 +585,7 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
         
         CGFloat total = self.view.width * [self leftGapPercentage];
         _statusBarCover.alpha = self.centerPanelContainer.x / total;
-
+        
         if (sender.state == UIGestureRecognizerStateEnded) {
             CGFloat deltaX =  frame.origin.x - _locationBeforePan.x;
             if ([self _validateThreshold:deltaX]) {
@@ -898,6 +901,7 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
 //    }
 
     [self _adjustCenterFrame];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
 
     if (animated) {
         [self _animateCenterPanel:shouldBounce completion:nil];
@@ -925,6 +929,7 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
 //    }
 
     [self _adjustCenterFrame];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
 
     if (animated) {
         [self _animateCenterPanel:shouldBounce completion:nil];
@@ -946,6 +951,7 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
     self.state = JASidePanelCenterVisible;
 
     [self _adjustCenterFrame];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
 
     if (animated) {
         [self _animateCenterPanel:shouldBounce completion:^(__unused BOOL finished) {
