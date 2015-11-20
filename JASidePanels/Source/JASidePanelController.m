@@ -585,6 +585,7 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
         
         CGFloat total = self.view.width * [self leftGapPercentage];
         _statusBarCover.alpha = self.centerPanelContainer.x / total;
+        appDelegateS.notificationBarController.tooltip.alpha = 1 - _statusBarCover.alpha;
         
         if (sender.state == UIGestureRecognizerStateEnded) {
             CGFloat deltaX =  frame.origin.x - _locationBeforePan.x;
@@ -809,6 +810,7 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
     CGFloat duration = [self _calculatedDuration];
     [UIView animateWithDuration:duration delay:0.0f options:UIViewAnimationOptionCurveLinear|UIViewAnimationOptionLayoutSubviews animations:^{
         _statusBarCover.alpha = _centerPanelRestingFrame.origin.x == 0 ? 0. : 1.;
+        appDelegateS.notificationBarController.tooltip.alpha = 1 - _statusBarCover.alpha;
         self.centerPanelContainer.frame = _centerPanelRestingFrame;
         [self styleContainer:self.centerPanelContainer animate:YES duration:duration];
         if (self.style == JASidePanelMultipleActive || self.pushesSidePanels) {
