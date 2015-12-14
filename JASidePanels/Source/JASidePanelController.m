@@ -498,7 +498,7 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
             }
         }
         if (!buttonController.navigationItem.leftBarButtonItem) {
-            buttonController.navigationItem.leftBarButtonItem = [self leftButtonForCenterPanel];
+            buttonController.navigationItem.leftBarButtonItem = appDelegateS.menuBarButtonItem;
         }
     }
 }
@@ -1037,21 +1037,6 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
 }
 
 #pragma mark - Public Methods
-
-- (UIBarButtonItem *)leftButtonForCenterPanel {
-    CustomUIButton *button = [CustomUIButton buttonWithType:UIButtonTypeCustom];
-    button.isLeftButton = YES;
-    
-    [button setImage:ANGArtworkFactory.menuIcon forState:UIControlStateNormal];
-    [button setImage:ANGArtworkFactory.menuIcon forState:UIControlStateHighlighted];
-    button.size = CGSizeMake(40, 40);
-    button.imageView.frame = button.bounds;
-    if(IsArabic && IS_IOS9())
-        [button addTarget:self action:@selector(toggleRightPanel:) forControlEvents:UIControlEventTouchUpInside];
-    else [button addTarget:self action:@selector(toggleLeftPanel:) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:button];
-    return item;
-}
 
 - (void)showLeftPanel:(BOOL)animated {
     [self showLeftPanelAnimated:animated];
