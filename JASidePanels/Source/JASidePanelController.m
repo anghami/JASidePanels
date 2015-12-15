@@ -497,8 +497,8 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
                 buttonController = [nav.viewControllers objectAtIndex:0];
             }
         }
-        if (!buttonController.navigationItem.leftBarButtonItem) {
-            buttonController.navigationItem.leftBarButtonItem = appDelegateS.menuBarButtonItem;
+        if (!buttonController.navigationItem.leftBarButtonItems) {
+            buttonController.navigationItem.leftBarButtonItems = appDelegateS.menuBarButtonItems;
         }
     }
 }
@@ -894,13 +894,8 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
 
 - (void)_showLeftPanel:(BOOL)animated bounce:(BOOL)shouldBounce {
     
-    [settingsS recordDismissTooltip:ANGTooltipTypeMenu];
     self.state = JASidePanelLeftVisible;
     [self _loadLeftPanel];
-
-//    if (!(_centerPanelScreenshot)) {
-//        [self _freezeCenterPanel];
-//    }
 
     [self _adjustCenterFrame];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
@@ -922,7 +917,6 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
 }
 
 - (void)_showRightPanel:(BOOL)animated bounce:(BOOL)shouldBounce {
-    [settingsS recordDismissTooltip:ANGTooltipTypeMenu];
     self.state = JASidePanelRightVisible;
     [self _loadRightPanel];
 
