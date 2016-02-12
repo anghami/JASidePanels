@@ -498,7 +498,7 @@ NSString * const JASidePanelControllerUnfreezingCenterPanel = @"JASidePanelContr
             }
         }
         if (!buttonController.navigationItem.leftBarButtonItems) {
-            buttonController.navigationItem.leftBarButtonItems = appDelegateS.menuBarButtonItems;
+            buttonController.navigationItem.leftBarButtonItems = appDelegateS.tabBarManager.menuBarButtonItems;
         }
     }
 }
